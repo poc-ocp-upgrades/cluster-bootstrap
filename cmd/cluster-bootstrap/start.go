@@ -3,40 +3,26 @@ package main
 import (
 	"errors"
 	"strings"
-
 	"github.com/spf13/cobra"
-
 	"github.com/openshift/cluster-bootstrap/pkg/start"
 )
 
 var (
-	cmdStart = &cobra.Command{
-		Use:          "start",
-		Short:        "Start the control plane",
-		Long:         "",
-		PreRunE:      validateStartOpts,
-		RunE:         runCmdStart,
-		SilenceUsage: true,
-	}
-
-	startOpts struct {
-		assetDir             string
-		podManifestPath      string
-		strict               bool
-		requiredPodClauses   []string
-		waitForTearDownEvent string
-		earlyTearDown        bool
+	cmdStart	= &cobra.Command{Use: "start", Short: "Start the control plane", Long: "", PreRunE: validateStartOpts, RunE: runCmdStart, SilenceUsage: true}
+	startOpts	struct {
+		assetDir		string
+		podManifestPath		string
+		strict			bool
+		requiredPodClauses	[]string
+		waitForTearDownEvent	string
+		earlyTearDown		bool
 	}
 )
-
-var defaultRequiredPods = []string{
-	"kube-system/pod-checkpointer",
-	"kube-system/kube-apiserver",
-	"kube-system/kube-scheduler",
-	"kube-system/kube-controller-manager",
-}
+var defaultRequiredPods = []string{"kube-system/pod-checkpointer", "kube-system/kube-apiserver", "kube-system/kube-scheduler", "kube-system/kube-controller-manager"}
 
 func init() {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	cmdRoot.AddCommand(cmdStart)
 	cmdStart.Flags().StringVar(&startOpts.assetDir, "asset-dir", "", "Path to the cluster asset directory.")
 	cmdStart.Flags().StringVar(&startOpts.podManifestPath, "pod-manifest-path", "/etc/kubernetes/manifests", "The location where the kubelet is configured to look for static pod manifests.")
@@ -45,31 +31,22 @@ func init() {
 	cmdStart.Flags().StringVar(&startOpts.waitForTearDownEvent, "tear-down-event", "", "if this optional event name of the form <ns>/<event-name> is given, the event is waited for before tearing down the bootstrap control plane")
 	cmdStart.Flags().BoolVar(&startOpts.earlyTearDown, "tear-down-early", true, "tear down immediate after the non-bootstrap control plane is up and bootstrap-success event is created.")
 }
-
 func runCmdStart(cmd *cobra.Command, args []string) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	podPrefixes, err := parsePodPrefixes(startOpts.requiredPodClauses)
 	if err != nil {
 		return err
 	}
-
-	bk, err := start.NewStartCommand(start.Config{
-		AssetDir:             startOpts.assetDir,
-		PodManifestPath:      startOpts.podManifestPath,
-		Strict:               startOpts.strict,
-		RequiredPodPrefixes:  podPrefixes,
-		WaitForTearDownEvent: startOpts.waitForTearDownEvent,
-		EarlyTearDown:        startOpts.earlyTearDown,
-	})
+	bk, err := start.NewStartCommand(start.Config{AssetDir: startOpts.assetDir, PodManifestPath: startOpts.podManifestPath, Strict: startOpts.strict, RequiredPodPrefixes: podPrefixes, WaitForTearDownEvent: startOpts.waitForTearDownEvent, EarlyTearDown: startOpts.earlyTearDown})
 	if err != nil {
 		return err
 	}
-
 	return bk.Run()
 }
-
-// parsePodPrefixes parses <ns>/<pod-prefix> or <desc>:<ns>/<pod-prefix>|... into a map with
-// the description as key and <ns>/<pod-prefix> as values.
 func parsePodPrefixes(clauses []string) (map[string][]string, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	podPrefixes := map[string][]string{}
 	for _, p := range clauses {
 		if strings.Contains(p, ":") {
@@ -85,8 +62,9 @@ func parsePodPrefixes(clauses []string) (map[string][]string, error) {
 	}
 	return podPrefixes, nil
 }
-
 func validateStartOpts(cmd *cobra.Command, args []string) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	if startOpts.podManifestPath == "" {
 		return errors.New("missing required flag: --pod-manifest-path")
 	}
