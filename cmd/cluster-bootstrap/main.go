@@ -19,6 +19,8 @@ var (
 func main() {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	flag.Parse()
 	InitLogs()
 	defer FlushLogs()

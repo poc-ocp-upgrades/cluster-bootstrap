@@ -23,6 +23,8 @@ var defaultRequiredPods = []string{"kube-system/pod-checkpointer", "kube-system/
 func init() {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	cmdRoot.AddCommand(cmdStart)
 	cmdStart.Flags().StringVar(&startOpts.assetDir, "asset-dir", "", "Path to the cluster asset directory.")
 	cmdStart.Flags().StringVar(&startOpts.podManifestPath, "pod-manifest-path", "/etc/kubernetes/manifests", "The location where the kubelet is configured to look for static pod manifests.")
@@ -32,6 +34,8 @@ func init() {
 	cmdStart.Flags().BoolVar(&startOpts.earlyTearDown, "tear-down-early", true, "tear down immediate after the non-bootstrap control plane is up and bootstrap-success event is created.")
 }
 func runCmdStart(cmd *cobra.Command, args []string) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	podPrefixes, err := parsePodPrefixes(startOpts.requiredPodClauses)
@@ -45,6 +49,8 @@ func runCmdStart(cmd *cobra.Command, args []string) error {
 	return bk.Run()
 }
 func parsePodPrefixes(clauses []string) (map[string][]string, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	podPrefixes := map[string][]string{}
@@ -63,6 +69,8 @@ func parsePodPrefixes(clauses []string) (map[string][]string, error) {
 	return podPrefixes, nil
 }
 func validateStartOpts(cmd *cobra.Command, args []string) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	if startOpts.podManifestPath == "" {

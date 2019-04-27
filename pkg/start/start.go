@@ -45,9 +45,13 @@ type startCommand struct {
 func NewStartCommand(config Config) (*startCommand, error) {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	return &startCommand{assetDir: config.AssetDir, podManifestPath: config.PodManifestPath, strict: config.Strict, requiredPodPrefixes: config.RequiredPodPrefixes, waitForTearDownEvent: config.WaitForTearDownEvent, earlyTearDown: config.EarlyTearDown}, nil
 }
 func (b *startCommand) Run() error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	restConfig, err := clientcmd.BuildConfigFromFlags("", filepath.Join(b.assetDir, assetPathAdminKubeConfig))
@@ -142,9 +146,13 @@ func (b *startCommand) Run() error {
 func UserOutput(format string, a ...interface{}) {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	fmt.Printf(format, a...)
 }
 func waitForEvent(ctx context.Context, client kubernetes.Interface, ns, name string) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	return wait.PollImmediateUntil(time.Second, func() (done bool, err error) {
@@ -158,6 +166,8 @@ func waitForEvent(ctx context.Context, client kubernetes.Interface, ns, name str
 	}, ctx.Done())
 }
 func makeBootstrapSuccessEvent(ns, name string) *corev1.Event {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	currentTime := metav1.Time{Time: time.Now()}

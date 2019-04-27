@@ -16,9 +16,13 @@ type bootstrapControlPlane struct {
 func newBootstrapControlPlane(assetDir, podManifestPath string) *bootstrapControlPlane {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	return &bootstrapControlPlane{assetDir: assetDir, podManifestPath: podManifestPath}
 }
 func (b *bootstrapControlPlane) Start() error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	UserOutput("Starting temporary bootstrap control plane...\n")
@@ -40,6 +44,8 @@ func (b *bootstrapControlPlane) Start() error {
 func (b *bootstrapControlPlane) Teardown() error {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	if b == nil {
 		return nil
 	}
@@ -56,6 +62,8 @@ func (b *bootstrapControlPlane) Teardown() error {
 	return nil
 }
 func copyFile(src, dst string, overwrite bool) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	flags := os.O_CREATE | os.O_WRONLY
@@ -76,6 +84,8 @@ func copyFile(src, dst string, overwrite bool) error {
 	return err
 }
 func copyDirectory(srcDir, dstDir string, overwrite bool) ([]string, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	var copied []string

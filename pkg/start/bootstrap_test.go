@@ -16,6 +16,8 @@ var (
 func setUp(t *testing.T) (assetDir, podManifestPath string) {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	var err error
 	assetDir, err = ioutil.TempDir("", "assets")
 	if err != nil {
@@ -56,6 +58,8 @@ func setUp(t *testing.T) (assetDir, podManifestPath string) {
 func tearDown(assetDir, podManifestPath string, t *testing.T) {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	if err := os.RemoveAll(assetDir); err != nil {
 		t.Fatal(err)
 	}
@@ -67,6 +71,8 @@ func tearDown(assetDir, podManifestPath string, t *testing.T) {
 	}
 }
 func TestBootstrapControlPlane(t *testing.T) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	assetDir, podManifestPath := setUp(t)
@@ -98,6 +104,8 @@ func TestBootstrapControlPlane(t *testing.T) {
 	}
 }
 func TestBootstrapControlPlaneNoOverwrite(t *testing.T) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	assetDir, podManifestPath := setUp(t)

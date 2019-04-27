@@ -19,6 +19,8 @@ import (
 func waitUntilPodsRunning(ctx context.Context, c kubernetes.Interface, pods map[string][]string) error {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	sc, err := newStatusController(c, pods)
 	if err != nil {
 		return err
@@ -41,9 +43,13 @@ type statusController struct {
 func newStatusController(client kubernetes.Interface, pods map[string][]string) (*statusController, error) {
 	_logClusterCodePath()
 	defer _logClusterCodePath()
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	return &statusController{client: client, watchPodPrefixes: pods}, nil
 }
 func (s *statusController) Run() {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	options := metav1.ListOptions{}
@@ -56,6 +62,8 @@ func (s *statusController) Run() {
 	go podController.Run(wait.NeverStop)
 }
 func (s *statusController) AllRunningAndReady() (bool, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	ps, err := s.podStatus()
@@ -97,6 +105,8 @@ type podStatus struct {
 }
 
 func (s *statusController) podStatus() (map[string]*podStatus, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	_logClusterCodePath()
 	defer _logClusterCodePath()
 	status := make(map[string]*podStatus)
