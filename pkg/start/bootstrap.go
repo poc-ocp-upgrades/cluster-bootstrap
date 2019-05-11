@@ -8,50 +8,41 @@ import (
 )
 
 type bootstrapControlPlane struct {
-	assetDir        string
-	podManifestPath string
-	ownedManifests  []string
+	assetDir		string
+	podManifestPath	string
+	ownedManifests	[]string
 }
 
-// newBootstrapControlPlane constructs a new bootstrap control plane object.
 func newBootstrapControlPlane(assetDir, podManifestPath string) *bootstrapControlPlane {
-	return &bootstrapControlPlane{
-		assetDir:        assetDir,
-		podManifestPath: podManifestPath,
-	}
+	_logClusterCodePath()
+	defer _logClusterCodePath()
+	return &bootstrapControlPlane{assetDir: assetDir, podManifestPath: podManifestPath}
 }
-
-// Start seeds static manifests to the kubelet to launch the bootstrap control plane.
-// Users should always ensure that Cleanup() is called even in the case of errors.
 func (b *bootstrapControlPlane) Start() error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	UserOutput("Starting temporary bootstrap control plane...\n")
-	// Make secrets temporarily available to bootstrap cluster.
 	if err := os.RemoveAll(bootstrapSecretsDir); err != nil {
 		return err
 	}
 	secretsDir := filepath.Join(b.assetDir, assetPathSecrets)
-	if _, err := copyDirectory(secretsDir, bootstrapSecretsDir, true /* overwrite */); err != nil {
+	if _, err := copyDirectory(secretsDir, bootstrapSecretsDir, true); err != nil {
 		return err
 	}
-	// Copy the admin kubeconfig. TODO(diegs): this is kind of a hack, maybe do something better.
-	if err := copyFile(filepath.Join(b.assetDir, assetPathAdminKubeConfig), filepath.Join(bootstrapSecretsDir, "kubeconfig"), true /* overwrite */); err != nil {
+	if err := copyFile(filepath.Join(b.assetDir, assetPathAdminKubeConfig), filepath.Join(bootstrapSecretsDir, "kubeconfig"), true); err != nil {
 		return err
 	}
-
-	// Copy the static manifests to the kubelet's pod manifest path.
 	manifestsDir := filepath.Join(b.assetDir, assetPathBootstrapManifests)
-	ownedManifests, err := copyDirectory(manifestsDir, b.podManifestPath, false /* overwrite */)
-	b.ownedManifests = ownedManifests // always copy in case of partial failure.
+	ownedManifests, err := copyDirectory(manifestsDir, b.podManifestPath, false)
+	b.ownedManifests = ownedManifests
 	return err
 }
-
-// Teardown brings down the bootstrap control plane and cleans up the temporary manifests and
-// secrets. This function is idempotent.
 func (b *bootstrapControlPlane) Teardown() error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	if b == nil {
 		return nil
 	}
-
 	UserOutput("Tearing down temporary bootstrap control plane...\n")
 	if err := os.RemoveAll(bootstrapSecretsDir); err != nil {
 		return err
@@ -64,34 +55,29 @@ func (b *bootstrapControlPlane) Teardown() error {
 	b.ownedManifests = nil
 	return nil
 }
-
-// copyFile copies a single file from src to dst. Returns an error if overwrite is true and dst
-// exists, or if any I/O error occurs during copying.
 func copyFile(src, dst string, overwrite bool) error {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	flags := os.O_CREATE | os.O_WRONLY
 	if !overwrite {
 		flags |= os.O_EXCL
 	}
-
 	dstfile, err := os.OpenFile(dst, flags, os.FileMode(0600))
 	if err != nil {
 		return err
 	}
 	defer dstfile.Close()
-
 	srcfile, err := os.Open(src)
 	if err != nil {
 		return err
 	}
 	defer srcfile.Close()
-
 	_, err = io.Copy(dstfile, srcfile)
 	return err
 }
-
-// copyDirectory copies srcDir to dstDir recursively. It returns the paths of files (not
-// directories) that were copied.
 func copyDirectory(srcDir, dstDir string, overwrite bool) ([]string, error) {
+	_logClusterCodePath()
+	defer _logClusterCodePath()
 	var copied []string
 	return copied, filepath.Walk(srcDir, func(src string, info os.FileInfo, err error) error {
 		if err != nil {
